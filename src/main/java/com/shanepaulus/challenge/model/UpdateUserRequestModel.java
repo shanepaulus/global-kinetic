@@ -5,13 +5,14 @@ import lombok.Data;
 /**
  * @author Shane Paulus
  * <p>
- * Date Created : 23-Aug-2021.
+ * Date Created : 24-Aug-2021.
  */
 
 @Data
-public class LoginRequestModel {
+public class UpdateUserRequestModel {
 
 	private String username;
+	private String phone;
 	private String password;
 
 }

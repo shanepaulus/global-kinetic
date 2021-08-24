@@ -1,5 +1,6 @@
 package com.shanepaulus.challenge.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -9,9 +10,9 @@ import lombok.Data;
  */
 
 @Data
+@AllArgsConstructor
 public class LoginResponseModel {
 
-	private Integer id;
 	private String token;
 
 }

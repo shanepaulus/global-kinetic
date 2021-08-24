@@ -1,0 +1,1 @@
+insert into user(username, password, phone) values ('paulie', '$2a$10$JFzlpk8Ti7eRtM7hSE8sz.qrJ5/oeE/B2U25swTfSTnP4o3SqbpJW', '0612829258');
