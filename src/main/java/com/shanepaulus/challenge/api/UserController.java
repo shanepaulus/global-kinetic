@@ -5,6 +5,7 @@ import java.util.List;
 import com.shanepaulus.challenge.domain.User;
 import com.shanepaulus.challenge.model.UpdateUserRequestModel;
 import com.shanepaulus.challenge.model.UserResponseModel;
+import com.shanepaulus.challenge.model.mapper.UserResponseModelMapper;
 import com.shanepaulus.challenge.service.JwtService;
 import com.shanepaulus.challenge.service.impl.UserServiceImpl;
 
@@ -44,7 +45,6 @@ public class UserController {
 	public ResponseEntity updateUser(@RequestBody UpdateUserRequestModel updateUserRequestModel, @RequestHeader("Authorization") String authorizationToken) throws Exception {
 		try {
 			String userNameByToken = this.jwtService.extractUserName(authorizationToken);
-			log.info("userNameByToken >> " + userNameByToken);
 			User user = this.userService.loadUserByUsername(userNameByToken);
 			user.setUsername(updateUserRequestModel.getUsername());
 			user.setPassword(updateUserRequestModel.getPhone());
@@ -61,7 +61,13 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<UserResponseModel>> getUserList() {
-		return null;
+	public ResponseEntity<List<UserResponseModel>> getUserList(@RequestHeader("Authorization") String authorizationTokenHeader) {
+		boolean isValidToken = !this.jwtService.isTokenExpired(authorizationTokenHeader);
+
+		if (isValidToken) {
+			return new ResponseEntity<>(UserResponseModelMapper.INSTANCE.mapFromUserList(this.userService.userList()), HttpStatus.OK);
+		} else {
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		}
 	}
 }

@@ -1,5 +1,8 @@
 package com.shanepaulus.challenge.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.shanepaulus.challenge.domain.User;
 import com.shanepaulus.challenge.repo.UserRepository;
 import com.shanepaulus.challenge.service.UserService;
@@ -48,5 +51,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 
 		return merged;
+	}
+
+	@Override
+	public List<User> userList() {
+		List<User> userList = new ArrayList<>();
+
+		for (User user : this.userRepository.findAll()) {
+			userList.add(user);
+		}
+
+		return userList;
 	}
 }

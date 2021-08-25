@@ -1,5 +1,7 @@
 package com.shanepaulus.challenge.service;
 
+import java.util.List;
+
 import com.shanepaulus.challenge.domain.User;
 
 /**
@@ -11,5 +13,7 @@ import com.shanepaulus.challenge.domain.User;
 public interface UserService {
 
 	boolean updateUser(User user);
+
+	List<User> userList();
 
 }

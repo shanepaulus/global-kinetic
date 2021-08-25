@@ -12,7 +12,6 @@ import lombok.Data;
 public class UserResponseModel {
 
 	private Integer id;
-	private String userName;
 	private String phone;
 
 }

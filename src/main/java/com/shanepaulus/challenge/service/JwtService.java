@@ -26,4 +26,6 @@ public interface JwtService {
 	String generateToken(UserDetails userDetails);
 
 	boolean validateToken(String token, UserDetails userDetails);
+
+	void expireToken(String token);
 }

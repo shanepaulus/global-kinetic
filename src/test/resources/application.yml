@@ -3,10 +3,6 @@ server:
   servlet:
     context-path: /api
 
-session:
-  token:
-    timeout-in-seconds: 180
-
 spring:
   jpa:
     defer-datasource-initialization: true

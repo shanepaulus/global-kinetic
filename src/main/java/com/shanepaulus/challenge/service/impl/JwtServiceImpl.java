@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import com.shanepaulus.challenge.service.JwtService;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtServiceImpl implements JwtService {
 
 	private final String secret = "secret";
+
+	@Value("${session.token.timeout-in-seconds}")
+	private Integer sessionTokenTimeoutInSeconds;
 
 	@Override
 	public String extractUserName(String token) {
@@ -48,6 +52,7 @@ public class JwtServiceImpl implements JwtService {
 
 	@Override
 	public boolean isTokenExpired(String token) {
+		System.out.println("isTokenExpired: token >> " + token + " expiration >> " + extractExpiration(token));
 		return extractExpiration(token).before(new Date());
 	}
 
@@ -68,5 +73,15 @@ public class JwtServiceImpl implements JwtService {
 	public boolean validateToken(String token, UserDetails userDetails) {
 		String userName = extractUserName(token);
 		return userName.equals(userDetails.getUsername()) && !isTokenExpired(token);
+	}
+
+	@Override
+	public void expireToken(String token) {
+		Claims claims = extractAllClaims(token);
+		claims.setExpiration(new Date());
+
+		// TODO: create a token caching mechanism as invalidating these tokens does not work!!!!
+
+		System.out.println("expireToken: token >> " + token + " expireDate >> " + claims.getExpiration());
 	}
 }
