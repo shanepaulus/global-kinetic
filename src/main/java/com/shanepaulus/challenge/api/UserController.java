@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.shanepaulus.challenge.domain.User;
 import com.shanepaulus.challenge.model.UpdateUserRequestModel;
+import com.shanepaulus.challenge.model.UserListRequestModel;
 import com.shanepaulus.challenge.model.UserResponseModel;
 import com.shanepaulus.challenge.model.mapper.UserResponseModelMapper;
 import com.shanepaulus.challenge.service.JwtService;
@@ -44,7 +45,7 @@ public class UserController {
 	@PutMapping
 	public ResponseEntity updateUser(@RequestBody UpdateUserRequestModel updateUserRequestModel, @RequestHeader("Authorization") String authorizationToken) throws Exception {
 		try {
-			String userNameByToken = this.jwtService.extractUserName(authorizationToken);
+			String userNameByToken = this.jwtService.extractUserName(authorizationToken);   // No need to even expire this token as the user will not be found!
 			User user = this.userService.loadUserByUsername(userNameByToken);
 			user.setUsername(updateUserRequestModel.getUsername());
 			user.setPassword(updateUserRequestModel.getPhone());
@@ -61,13 +62,13 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<UserResponseModel>> getUserList(@RequestHeader("Authorization") String authorizationTokenHeader) {
-		boolean isValidToken = !this.jwtService.isTokenExpired(authorizationTokenHeader);
+	public ResponseEntity<List<UserResponseModel>> getUserList(@RequestBody UserListRequestModel userListRequestModel) {
+		boolean isValidToken = !this.jwtService.isTokenExpired(userListRequestModel.getToken());
 
 		if (isValidToken) {
 			return new ResponseEntity<>(UserResponseModelMapper.INSTANCE.mapFromUserList(this.userService.userList()), HttpStatus.OK);
 		} else {
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 	}
 }

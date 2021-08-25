@@ -12,9 +12,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 /**
  * @author Shane Paulus
@@ -39,14 +37,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/login")
 				.permitAll()
+				.antMatchers(HttpMethod.POST, "/logout")
+				.permitAll()
 				.antMatchers(HttpMethod.PUT, "/users")
+				.permitAll()
+				.antMatchers(HttpMethod.GET, "/users")
 				.permitAll()
 				.anyRequest()
 				.authenticated();
 	}
 
 	@Override
-	public void configure(WebSecurity web) throws Exception {
+	public void configure(WebSecurity web) {
 		web.ignoring()
 				.antMatchers("/h2-console/**");
 	}
@@ -59,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		// Check on how to use the delegating password encoder!
 		return new BCryptPasswordEncoder();
 	}
 }

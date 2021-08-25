@@ -11,6 +11,7 @@ import java.util.Date;
 
 import com.shanepaulus.challenge.service.impl.JwtServiceImpl;
 
+import org.apache.commons.lang.reflect.FieldUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,8 +33,10 @@ public class JwtServiceTest {
 	private JwtServiceImpl jwtService;
 
 	@BeforeEach
-	public void before() {
+	public void before() throws IllegalAccessException {
 		openMocks(this);
+		FieldUtils.writeField(this.jwtService, "sessionTokenTimeoutInSeconds", 180, true);
+		this.jwtService.init();
 	}
 
 	@Test
@@ -59,6 +62,7 @@ public class JwtServiceTest {
 
 	@Test
 	public void testIsTokenExpired() {
+		this.jwtService.init();
 		UserDetails userDetails = new User(USER_NAME, PASSWORD, new ArrayList<>());
 		String token = this.jwtService.generateToken(userDetails);
 		assertNotNull(token);
